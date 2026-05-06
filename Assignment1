@@ -1,0 +1,59 @@
+import java.util.*;
+
+public class Main {
+
+    public static int maxCyclicSubstringSum(String s) {
+        int n = s.length();
+        String t = s + s;
+
+        int left = 0;
+        int currentSum = 0;
+        int maxSum = 0;
+
+        int[] freq = new int[26];
+
+        for (int right = 0; right < t.length(); right++) {
+            char ch = t.charAt(right);
+
+            if (ch < 'a' || ch > 'z') continue;
+
+            int idx = ch - 'a';
+            int val = idx + 1;
+
+            while (freq[idx] > 0) {
+                char leftChar = t.charAt(left);
+
+                if (leftChar >= 'a' && leftChar <= 'z') {
+                    int leftIdx = leftChar - 'a';
+                    currentSum -= (leftIdx + 1);
+                    freq[leftIdx]--;
+                }
+                left++;
+            }
+            while ((right - left + 1) > n) {
+                char leftChar = t.charAt(left);
+
+                if (leftChar >= 'a' && leftChar <= 'z') {
+                    int leftIdx = leftChar - 'a';
+                    currentSum -= (leftIdx + 1);
+                    freq[leftIdx]--;
+                }
+                left++;
+            }
+            freq[idx]++;
+            currentSum += val;
+
+            maxSum = Math.max(maxSum, currentSum);
+        }
+
+        return maxSum;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String s = sc.nextLine().toLowerCase().trim();
+
+        int result = maxCyclicSubstringSum(s);
+        System.out.println(result);
+    }
+}
